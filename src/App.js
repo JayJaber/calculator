@@ -163,7 +163,7 @@ function App() {
   }
 
   const handleOperator = (op) => {
-    if (op!==operator && operator!=='') {
+    if (operator!=='') {
       setKey(false);
         switch (operator) {
           case '+':
