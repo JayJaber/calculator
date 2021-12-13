@@ -130,9 +130,7 @@ function App() {
           setKey(true);
         }
       }
-    }
-
-    
+    }    
     // switch (operator) {
     //   // default if no operator is selected
     //   case '+':
@@ -164,6 +162,37 @@ function App() {
     // }
   }
 
+  const handleOperator = (op) => {
+    if (op!==operator && operator!=='') {
+      setKey(false);
+        switch (operator) {
+          case '+':
+            setValue(value + value2);
+            setValue2(0);
+            setOperator('');
+            break;
+          case '-':
+            setValue(value - value2);
+            setValue2(0);
+            setOperator('');
+            break;
+          case '*':
+            setValue(value * value2);
+            setValue2(0);
+            setOperator('');
+            break;
+          case '/':
+            setValue(value / value2);
+            setValue2(0);
+            setOperator('');
+            break;
+          default:
+            break;
+        }
+    }
+    setOperator(op);
+  }
+
   const Buttons = () => {
     return (
       <div className='buttons'>
@@ -178,7 +207,7 @@ function App() {
           <div className='btn lGrey' onClick={() => handleNumPress('hundredth')}>
             <div className='key'>%</div>
           </div>
-          <div className={operator=== '/'? 'btn active': 'btn orange'} onClick={() => setOperator('/')}>
+          <div className={operator=== '/'? 'btn active': 'btn orange'} onClick={() => handleOperator('/')}>
           <div className='key'>&divide;</div>
           </div>
         </div>
@@ -193,7 +222,7 @@ function App() {
           <div className='btn dGrey' onClick={() => handleNumPress(9)}>
             <div className='key'>9</div>
           </div>
-          <div className={operator=== '*'? 'btn active': 'btn orange fade'} onClick={() => setOperator('*')}>
+          <div className={operator=== '*'? 'btn active': 'btn orange fade'} onClick={() => handleOperator('*')}>
           <div className='key'>&times;</div>
           </div>
         </div>
@@ -208,7 +237,7 @@ function App() {
           <div className='btn dGrey' onClick={() => handleNumPress(6)}>
             <div className='key'>6</div>
           </div>
-          <div className={operator=== '-'? 'btn active': 'btn orange'} onClick={() => setOperator('-')}>
+          <div className={operator=== '-'? 'btn active': 'btn orange'} onClick={() => handleOperator('-')}>
           <div className='key'>&minus;</div>
           </div>
         </div>
@@ -223,7 +252,7 @@ function App() {
           <div className='btn dGrey' onClick={() => handleNumPress(3)}>
             <div className='key'>3</div>
           </div>
-          <div className={operator=== '+'? 'btn active': 'btn orange'} onClick={() => setOperator('+')}>
+          <div className={operator=== '+'? 'btn active': 'btn orange'} onClick={() => handleOperator('+')}>
           <div className='key'>&#43;</div>
           </div>
         </div>
