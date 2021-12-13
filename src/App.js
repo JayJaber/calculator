@@ -1,23 +1,26 @@
 import React from 'react';
-// import logo from './logo.svg';
 import './App.css';
 
 function App() {
-
+  // The inputs of the calulator
   const [value, setValue] = React.useState(0);
   const [value2, setValue2] = React.useState(0);
-  
-  const [key, setKey] = React.useState(false);
 
+  // If toggled to display second value
+  const [toggleDisplay, setToggleDisplay] = React.useState(false);
+
+  // handling decimal inputs
   const [decimal, setDecimal] = React.useState(false);
   const [place, setPlace] = React.useState(10);
   
+  // the operater (none, +, - , *, /)
   const [operator, setOperator] = React.useState('');
 
+  // used for checking if display has overflow
   const watchRef = React.createRef();
   const updateRef = React.createRef();
 
-  // For shrinking display when number overflows
+  // For shrinking display fontsize when number overflows
   React.useLayoutEffect(() => {
     let font = 7;
     while (watchRef.current.clientWidth < watchRef.current.scrollWidth) {
@@ -27,12 +30,13 @@ function App() {
     }
   }, [watchRef, updateRef]);
 
+  // The calculator screen
   const Display = () => {
     return (
       <>
       <div className='display'>
         <div className='value' ref={updateRef}>
-          {key? <>{value2.toLocaleString("en-US")}{decimal? '.' : ''}</> : <>{value.toLocaleString("en-US")}{decimal? '.' : ''}</>}{[...Array(Math.log10(place) - 1)].map((i) => 0)}
+          {toggleDisplay? <>{value2.toLocaleString("en-US")}{decimal? '.' : ''}</> : <>{value.toLocaleString("en-US")}{decimal? '.' : ''}</>}{[...Array(Math.log10(place) - 1)].map((i) => 0)}
         </div>
       </div>
       {/* For making the value responsive */}
@@ -45,13 +49,13 @@ function App() {
     );
   }
 
-  const handleNumPress = (number) => {
-
+  // Handling when a calculator key is pressed
+  const handleKeyPress = (number) => {
     switch (number) { 
       case 'clear':
         setValue(0);
         setValue2(0);
-        setKey(false);
+       setToggleDisplay(false);
         setOperator('');
         return;
       case 'negative':
@@ -66,7 +70,7 @@ function App() {
         setOperator('');
         return;
       case 'equals':
-        setKey(false);
+       setToggleDisplay(false);
         switch (operator) {
           case '+':
             setValue(value + value2);
@@ -94,10 +98,8 @@ function App() {
         setOperator('');
         return;
       default:
-        // if (operator === '.')
         break;
     }
-    // setLastOperator(operator)
 
     if (Number.isInteger(number)) {
       if (operator === '') {
@@ -125,44 +127,16 @@ function App() {
         }
         else {
           setValue2(parseFloat((value2+'') + (number+'')));
-          setKey(true);
+         setToggleDisplay(true);
         }
       }
-    }    
-    // switch (operator) {
-    //   // default if no operator is selected
-    //   case '+':
-    //     setValue(value + number);
-    //     setOperator('');
-    //     break;
-    //   case '-':
-    //     setValue(value - number);
-    //     setOperator('');
-    //     break;
-    //   case '*':
-    //     setValue(value * number);
-    //     setOperator('');
-    //     break;
-    //   case '/':
-    //     setValue(value / number);
-    //     setOperator('');
-    //     break;
-    //   case '.':
-    //     setValue(value + (number / 10));
-    //     setOperator('');
-    //     break;
-    //   case 'answered':
-    //     setValue(number);
-    //     setOperator('');
-    //     break;
-    //   default:
-    //     setValue(parseFloat((value+'') + (number+'')));
-    // }
+    }
   }
 
+  // handling when a operator is set
   const handleOperator = (op) => {
     if (operator!=='') {
-      setKey(false);
+     setToggleDisplay(false);
         switch (operator) {
           case '+':
             setValue(value + value2);
@@ -191,18 +165,19 @@ function App() {
     setOperator(op);
   }
 
+  // The buttons of the calculator
   const Buttons = () => {
     return (
       <div className='buttons'>
         {/* Row 1 */}
         <div className='btnRow'>
-          <div className='btn lGrey' onClick={() => handleNumPress('clear')}>
+          <div className='btn lGrey' onClick={() => handleKeyPress('clear')}>
             <div className='key'>{value===0? 'AC': 'C'}</div>
           </div>
-          <div className='btn lGrey' onClick={() => handleNumPress('negative')}>
+          <div className='btn lGrey' onClick={() => handleKeyPress('negative')}>
             <div className='key'>+/-</div>
           </div>
-          <div className='btn lGrey' onClick={() => handleNumPress('hundredth')}>
+          <div className='btn lGrey' onClick={() => handleKeyPress('hundredth')}>
             <div className='key'>%</div>
           </div>
           <div className={operator=== '/'? 'btn active': 'btn orange'} onClick={() => handleOperator('/')}>
@@ -211,13 +186,13 @@ function App() {
         </div>
         {/* Row 2 */}
         <div className='btnRow'>
-          <div className='btn dGrey' onClick={() => handleNumPress(7)}>
+          <div className='btn dGrey' onClick={() => handleKeyPress(7)}>
             <div className='key'>7</div>
           </div>
-          <div className='btn dGrey' onClick={() => handleNumPress(8)}>
+          <div className='btn dGrey' onClick={() => handleKeyPress(8)}>
             <div className='key'>8</div>
           </div>
-          <div className='btn dGrey' onClick={() => handleNumPress(9)}>
+          <div className='btn dGrey' onClick={() => handleKeyPress(9)}>
             <div className='key'>9</div>
           </div>
           <div className={operator=== '*'? 'btn active': 'btn orange fade'} onClick={() => handleOperator('*')}>
@@ -226,13 +201,13 @@ function App() {
         </div>
         {/* Row 3 */}
         <div className='btnRow'>
-          <div className='btn dGrey' onClick={() => handleNumPress(4)}>
+          <div className='btn dGrey' onClick={() => handleKeyPress(4)}>
             <div className='key'>4</div>
           </div>
-          <div className='btn dGrey' onClick={() => handleNumPress(5)}>
+          <div className='btn dGrey' onClick={() => handleKeyPress(5)}>
             <div className='key'>5</div>
           </div>
-          <div className='btn dGrey' onClick={() => handleNumPress(6)}>
+          <div className='btn dGrey' onClick={() => handleKeyPress(6)}>
             <div className='key'>6</div>
           </div>
           <div className={operator=== '-'? 'btn active': 'btn orange'} onClick={() => handleOperator('-')}>
@@ -241,13 +216,13 @@ function App() {
         </div>
         {/* Row 4 */}
         <div className='btnRow'>
-          <div className='btn dGrey' onClick={() => handleNumPress(1)}>
+          <div className='btn dGrey' onClick={() => handleKeyPress(1)}>
             <div className='key'>1</div>
           </div>
-          <div className='btn dGrey' onClick={() => handleNumPress(2)}>
+          <div className='btn dGrey' onClick={() => handleKeyPress(2)}>
             <div className='key'>2</div>
           </div>
-          <div className='btn dGrey' onClick={() => handleNumPress(3)}>
+          <div className='btn dGrey' onClick={() => handleKeyPress(3)}>
             <div className='key'>3</div>
           </div>
           <div className={operator=== '+'? 'btn active': 'btn orange'} onClick={() => handleOperator('+')}>
@@ -256,13 +231,13 @@ function App() {
         </div>
         {/* Row 5 */}
         <div className='btnRow'>
-          <div className='btn dGrey wide' onClick={() => handleNumPress(0)}>
+          <div className='btn dGrey wide' onClick={() => handleKeyPress(0)}>
             <div className='key'>0</div>
           </div>
           <div className='btn dGrey' onClick={() => {if((operator==='' && value%1===0) || (operator!=='' && value2%1===0)) setDecimal(true)}}>
             <div className='key'>.</div>
           </div>
-          <div className='btn orange' onClick={() => handleNumPress('equals')}>
+          <div className='btn orange' onClick={() => handleKeyPress('equals')}>
           <div className='key'>=</div>
           </div>
         </div>
@@ -270,6 +245,7 @@ function App() {
     )
   }
 
+  // The page footer with name and links
   const Footer = () => {
     return <div className='footer'>
       <div className='col50'>&copy; 2021 Jay Jaber</div>
@@ -299,20 +275,6 @@ function App() {
 
   return (
     <div className="App">
-      {/* <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header> */}
       <main>
         <Display/>
         <Buttons/>
