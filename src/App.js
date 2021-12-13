@@ -13,8 +13,6 @@ function App() {
   const [place, setPlace] = React.useState(10);
   
   const [operator, setOperator] = React.useState('');
-  const [lastOperatot, setLastOperator] = React.useState('');
-
 
   const watchRef = React.createRef();
   const updateRef = React.createRef();
