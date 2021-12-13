@@ -57,9 +57,10 @@ function App() {
         setOperator('');
         return;
       case 'negative':
-        setValue(value * -1);
-        setValue2(0);
-        setOperator('');
+        if (operator === '')
+          setValue(value * -1);
+        else 
+          setValue2(value2 * -1);
         return;
       case 'hundredth':
         setValue(value / 100);
